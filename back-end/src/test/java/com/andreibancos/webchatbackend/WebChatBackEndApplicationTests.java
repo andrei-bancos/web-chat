@@ -1,10 +1,10 @@
-package com.andreibancos.backend;
+package com.andreibancos.webchatbackend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BackEndApplicationTests {
+class WebChatBackEndApplicationTests {
 
 	@Test
 	void contextLoads() {
