@@ -1,0 +1,46 @@
+<section>
+  <h2 class="text-white text-[40px] font-medium drop-shadow-md">Conectează-te</h2>
+  <form [formGroup]="loginForm!" (ngSubmit)="onSubmit()" class="flex flex-col gap-[20px] w-max-[300px] w-full mt-[30px]">
+    <div class="flex flex-col w-full">
+      <input
+        formControlName="email"
+        class="h-[50px] px-[10px] rounded-[10px] drop-shadow-md outline-0"
+        type="text"
+        placeholder="Email address"
+      />
+      <div
+        *ngIf="loginForm!.get('email')?.invalid && (loginForm!.get('email')?.dirty ||
+               loginForm!.get('email')?.touched)"
+        class="text-white italic max-w-[300px] mt-[5px]"
+      >
+        <p *ngIf="loginForm!.get('email')?.hasError('required')">
+          Adresa de email este obligatoriu.
+        </p>
+        <p *ngIf="loginForm!.get('email')?.hasError('email')">
+          Adresa de email invalidă.
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-col w-full">
+      <input
+        formControlName="password"
+        class="h-[50px] px-[10px] rounded-[10px] drop-shadow-md outline-0"
+        type="password"
+        placeholder="Password"
+      />
+      <div
+        *ngIf="loginForm!.get('password')?.invalid && (loginForm!.get('password')?.dirty ||
+               loginForm!.get('password')?.touched)"
+        class="text-white italic max-w-[300px] mt-[5px]"
+      >
+        <p *ngIf="loginForm!.get('password')?.hasError('required')">
+          Parola este obligatorie.
+        </p>
+      </div>
+    </div>
+    <p *ngIf="errorMessage.length > 0" class="text-white text-[20px] font-medium italic">* {{errorMessage}}</p>
+    <button class="text-white text-[20px] h-[50px] rounded-[10px] bg-[#388eef] drop-shadow-md" type="submit">
+      Conectează-te
+    </button>
+  </form>
+</section>

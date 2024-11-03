@@ -1,0 +1,123 @@
+<section>
+  <h2 class="text-white text-[40px] font-medium drop-shadow-md">Înregistrează-te</h2>
+  <form [formGroup]="registerForm!" (ngSubmit)="onSubmit()" class="flex flex-col gap-[20px] max-w-[300px] w-full mt-[30px]">
+    <div class="flex flex-col w-full">
+      <input
+        formControlName="firstName"
+        class="h-[50px] px-[10px] rounded-[10px] drop-shadow-md outline-0"
+        type="text"
+        placeholder="First name"
+      />
+      <div
+        *ngIf="registerForm!.get('firstName')?.invalid && (registerForm!.get('firstName')?.dirty ||
+               registerForm!.get('firstName')?.touched)"
+        class="text-white italic max-w-[300px] mt-[5px]"
+      >
+        <p *ngIf="registerForm!.get('firstName')?.hasError('required')">
+          Prenumele este obligatoriu.
+        </p>
+        <p *ngIf="registerForm!.get('firstName')?.hasError('minlength')">
+          Prenumele trebuie să aibă cel puțin 2 caractere.
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-col w-full">
+      <input
+        formControlName="lastName"
+        class="h-[50px] px-[10px] rounded-[10px] drop-shadow-md outline-0"
+        type="text"
+        placeholder="Last name"
+      />
+      <div
+        *ngIf="registerForm!.get('lastName')?.invalid && (registerForm!.get('lastName')?.dirty ||
+               registerForm!.get('lastName')?.touched)"
+        class="text-white italic max-w-[300px] mt-[5px]"
+      >
+        <p *ngIf="registerForm!.get('lastName')?.hasError('required')">
+          Numele de familie este obligatoriu.
+        </p>
+        <p *ngIf="registerForm!.get('lastName')?.hasError('minlength')">
+          Numele de familie trebuie să aibă cel puțin 2 caractere.
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-col w-full">
+      <input
+        formControlName="email"
+        class="h-[50px] px-[10px] rounded-[10px] drop-shadow-md outline-0"
+        type="text"
+        placeholder="Email address"
+      />
+      <div
+        *ngIf="registerForm!.get('email')?.invalid && (registerForm!.get('email')?.dirty ||
+               registerForm!.get('email')?.touched)"
+        class="text-white italic max-w-[300px] mt-[5px]"
+      >
+        <p *ngIf="registerForm!.get('email')?.hasError('required')">
+          Adresa de email este obligatoriu.
+        </p>
+        <p *ngIf="registerForm!.get('email')?.hasError('email')">
+          Adresa de email invalidă.
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-col w-full">
+      <input
+        formControlName="username"
+        class="h-[50px] px-[10px] rounded-[10px] drop-shadow-md outline-0"
+        type="text"
+        placeholder="Username"
+      />
+      <div
+        *ngIf="registerForm!.get('username')?.invalid && (registerForm!.get('username')?.dirty ||
+               registerForm!.get('username')?.touched)"
+        class="text-white italic max-w-[300px] mt-[5px]"
+      >
+        <p *ngIf="registerForm!.get('username')?.hasError('required')">
+          Numele de utilizator este obligatoriu.
+        </p>
+        <p *ngIf="registerForm!.get('username')?.hasError('minlength')">
+          Numele de utilizator trebuie sa aibă minim 2 caractere.
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-col w-full">
+      <input
+        formControlName="password"
+        class="h-[50px] px-[10px] rounded-[10px] drop-shadow-md outline-0"
+        type="password"
+        placeholder="Password"
+      />
+      <div
+        *ngIf="registerForm!.get('password')?.invalid && (registerForm!.get('password')?.dirty || registerForm!.get('password')?.touched)"
+        class="text-white italic max-w-[300px] mt-[5px]"
+      >
+        <p *ngIf="registerForm!.get('password')?.hasError('required')">
+          Parola este obligatorie.
+        </p>
+        <p *ngIf="registerForm!.get('password')?.hasError('minlength')">
+          Parola trebuie să aibă minim 8 caractere.
+        </p>
+        <p *ngIf="registerForm!.get('password')?.hasError('maxlength')">
+          Parola nu poate avea mai mult de 20 de caractere.
+        </p>
+        <p *ngIf="registerForm!.get('password')?.hasError('pattern') && registerForm!.get('password')?.errors!['pattern'].requiredPattern.includes('[A-Z]')">
+          Parola trebuie să conțină cel puțin o literă mare.
+        </p>
+        <p *ngIf="registerForm!.get('password')?.hasError('pattern') && registerForm!.get('password')?.errors!['pattern'].requiredPattern.includes('[a-z]')">
+          Parola trebuie să conțină cel puțin o literă mică.
+        </p>
+        <p *ngIf="registerForm!.get('password')?.hasError('pattern') && registerForm!.get('password')?.errors!['pattern'].requiredPattern.includes('[0-9]')">
+          Parola trebuie să conțină cel puțin o cifră.
+        </p>
+        <p *ngIf="registerForm!.get('password')?.hasError('pattern') && registerForm!.get('password')?.errors!['pattern'].requiredPattern.includes('[\\W_]')">
+          Parola trebuie să conțină cel puțin un caracter special (ex: &#64;, #, $, etc.).
+        </p>
+      </div>
+    </div>
+    <p *ngIf="errorMessage.length > 0" class="text-white text-[20px] font-medium italic">* {{errorMessage}}</p>
+    <button class="text-white text-[20px] h-[50px] rounded-[10px] bg-[#388eef] drop-shadow-md" type="submit">
+      Înregistrează-te
+    </button>
+  </form>
+</section>

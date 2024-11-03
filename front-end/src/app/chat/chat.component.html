@@ -1,0 +1,27 @@
+<app-chat-contacts *ngIf="isContactsVisible" />
+<main class="flex justify-center items-center w-dvw min-h-dvh py-[30px] bg-[#ddd]">
+  <div class="flex flex-col w-full max-w-[1200px] gap-[50px] mx-[30px]">
+    <div class="flex gap-[20px_50px] items-center flex-wrap">
+      <div class="flex gap-[15px] items-center w-full max-w-[250px] h-fit bg-white rounded-[10px] shadow-md">
+        <img class="rounded-l-[10px]" ngSrc="/avatar.png" width="100" height="100" alt="" />
+        <div>
+          <h2 class="text-[20px] font-medium">Full name</h2>
+          <div class="flex gap-[15px]">
+            <a class="underline underline-offset-4" href="/">Settings</a>
+            <a class="text-[#587DBD] underline underline-offset-4" (click)="logout()" href="/">Logout</a>
+          </div>
+        </div>
+      </div>
+      <button
+        (click)="onContactsClick()"
+        class="text-[20px] text-white font-medium w-[150px] h-[50px] bg-black rounded-[10px] shadow-md"
+      >
+        Contacts
+      </button>
+    </div>
+    <div class="flex w-full gap-[50px] flex-wrap sm:flex-nowrap">
+      <app-chat-history />
+      <app-chat-message class="w-full" />
+    </div>
+  </div>
+</main>

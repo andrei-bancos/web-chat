@@ -1,0 +1,39 @@
+<main
+  [style.background-image]="'url(' + imageBgUrl + ')'"
+  class="flex flex-col justify-center items-center w-dvw min-h-dvh py-[30px] bg-no-repeat bg-center bg-cover"
+>
+  <div (click)="onClickLogo()" class="flex flex-col items-center cursor-pointer">
+    <img ngSrc="/logo.png" width="100" height="93" alt="logo" class="drop-shadow-lg">
+    <h1 class="text-white text-[40px] font-bold drop-shadow-md">
+      Web Chat
+    </h1>
+  </div>
+  <div *ngIf="!showLogin && !showRegister" class="flex flex-col items-center gap-[20px] mt-[30px] mx-[30px]">
+    <p class="text-white text-[23px] text-center font-medium drop-shadow-md">
+      Pentru a utiliza acestă aplicație de chat ai nevoie de un cont
+    </p>
+    <div class="flex w-full flex-wrap gap-[15px] max-w-[350px] justify-center sm:justify-between">
+      <button
+        (click)="displayRegister()"
+        class="text-white text-[20px] font-medium w-full sm:w-fit p-[10px_15px] rounded-[10px] bg-[#111] drop-shadow-lg"
+      >
+        Înregistrează-te
+      </button>
+      <button
+        (click)="displayLogin()"
+        class="text-white text-[20px] font-medium w-full sm:w-fit p-[10px_15px] rounded-[10px] bg-[#388eef] drop-shadow-lg"
+      >
+        Conectează-te
+      </button>
+    </div>
+    <button
+      (click)="onClickGoogleLoginBtn()"
+      class="flex items-center text-[20px] font-medium p-[10px_40px] gap-[30px] bg-white rounded-[10px] drop-shadow-lg"
+    >
+      <img ngSrc="/google_logo.png" width="60" height="60" alt="google logo">
+      Continuă cu google
+    </button>
+  </div>
+  <app-register (newUserAccountCreated)="displayLogin()" *ngIf="showRegister" />
+  <app-login *ngIf="showLogin" />
+</main>
