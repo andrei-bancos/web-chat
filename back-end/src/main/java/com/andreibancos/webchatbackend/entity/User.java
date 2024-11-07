@@ -4,11 +4,14 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(generator = "UUID")
     private UUID id;
@@ -20,9 +23,18 @@ public class User {
     @Column(unique = true)
     private String username;
     private String password;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+
+    @ManyToMany()
+    @JoinTable(
+            name = "user_contacts",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "contact_id")
+    )
+    private Set<User> contacts = new HashSet<>();
 
     public User() {}
 
@@ -36,6 +48,10 @@ public class User {
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -84,5 +100,23 @@ public class User {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Set<User> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Set<User> contacts) {
+        this.contacts = contacts;
+    }
+
+    public void addContact(User user) {
+        this.contacts.add(user);
+        user.getContacts().add(this);
+    }
+
+    public void removeContact(User user) {
+        this.contacts.remove(user);
+        user.getContacts().remove(this);
     }
 }

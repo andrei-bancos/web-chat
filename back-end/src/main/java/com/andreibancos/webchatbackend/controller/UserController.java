@@ -1,6 +1,8 @@
 package com.andreibancos.webchatbackend.controller;
 
 import com.andreibancos.webchatbackend.IGeneralMapper;
+import com.andreibancos.webchatbackend.dto.ChangeUserPasswordDto;
+import com.andreibancos.webchatbackend.dto.DisplayUserDto;
 import com.andreibancos.webchatbackend.dto.RegisterUserDto;
 import com.andreibancos.webchatbackend.entity.User;
 import com.andreibancos.webchatbackend.service.IUserService;
@@ -10,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -26,6 +30,23 @@ public class UserController {
         this.generalMapper = generalMapper;
     }
 
+    @GetMapping("/authenticated")
+    @Operation(summary = "Get authenticated user details")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Return user details."),
+            @ApiResponse(responseCode = "404", description = "Not found.")
+    })
+    public ResponseEntity<DisplayUserDto> getAuthenticatedUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated()) {
+            User user = userService.getUserByUsername(authentication.getName());
+            DisplayUserDto displayUserDto = generalMapper.userToDisplayUserDto(user);
+            return ResponseEntity.ok(displayUserDto);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
     @PostMapping
     @Operation(summary = "Create a new user")
     @ApiResponses(value = {
@@ -36,5 +57,29 @@ public class UserController {
         User user = generalMapper.registerUserDtoToUser(registerUserDto);
         userService.createUser(user);
         return ResponseEntity.ok(Map.of("message", "User has been created!"));
+    }
+
+    @PutMapping("/password")
+    @Operation(summary = "Change user password")
+    public ResponseEntity<Map<String, String>> updateUserPassword(@RequestBody ChangeUserPasswordDto changeUserPasswordDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated()) {
+            User user = userService.getUserByUsername(authentication.getName());
+            userService.updateUserPassword(user, changeUserPasswordDto);
+            return ResponseEntity.ok(Map.of("message", "Password has been updated!"));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping
+    @Operation(summary = "Delete user")
+    public ResponseEntity<String> deleteUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated()) {
+            User user = userService.getUserByUsername(authentication.getName());
+            userService.deleteUser(user.getId());
+        }
+        return ResponseEntity.noContent().build();
     }
 }

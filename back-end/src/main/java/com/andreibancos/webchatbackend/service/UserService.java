@@ -1,11 +1,14 @@
 package com.andreibancos.webchatbackend.service;
 
+import com.andreibancos.webchatbackend.dto.ChangeUserPasswordDto;
 import com.andreibancos.webchatbackend.entity.User;
 import com.andreibancos.webchatbackend.repository.IUserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -61,14 +64,18 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User updateUser(User user) {
+    public void updateUserPassword(User user, ChangeUserPasswordDto changeUserPasswordDto) {
         User userToUpdate = getUserById(user.getId());
 
-        userToUpdate.setFirstName(user.getFirstName());
-        userToUpdate.setLastName(user.getLastName());
-        userToUpdate.setEmail(user.getEmail());
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        return userRepository.save(userToUpdate);
+        if(bCryptPasswordEncoder.matches(changeUserPasswordDto.getOldPassword(), userToUpdate.getPassword())) {
+            userToUpdate.setPassword(bCryptPasswordEncoder.encode(changeUserPasswordDto.getNewPassword()));
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old password does not match");
+        }
+
+        userRepository.save(userToUpdate);
     }
 
     @Override

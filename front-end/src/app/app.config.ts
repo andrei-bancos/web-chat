@@ -7,7 +7,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideStore } from '@ngrx/store';
 import {chatReducer} from "./chat/chat.reducer";
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import {provideHttpClient} from "@angular/common/http";
+import {provideHttpClient, withFetch} from "@angular/common/http";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +22,6 @@ export const appConfig: ApplicationConfig = {
       trace: false,
       traceLimit: 75
     }),
-    provideHttpClient()
+    provideHttpClient(withFetch())
 ]
 };

@@ -65,6 +65,7 @@ public class AuthController {
             ResponseCookie cookie = ResponseCookie.from("JWT", jwtToken)
                     .httpOnly(true)
                     .secure(isProduction)
+                    .path("/")
                     .sameSite("strict")
                     .maxAge(24 * 3600)
                     .build();
@@ -87,6 +88,7 @@ public class AuthController {
     @Operation(summary = "Logout user")
     public void logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("JWT", null);
+        cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
