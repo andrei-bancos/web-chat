@@ -12,6 +12,7 @@ export type regUser = {
 }
 
 export type User = {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -44,5 +45,30 @@ export class UserService {
 
   deleteUser(): Observable<any> {
     return this.http.delete(environment.apiUrl + '/user', {withCredentials: true});
+  }
+
+  getContacts(): Observable<any> {
+    return this.http.get(environment.apiUrl + '/user/contacts', {withCredentials: true, observe: 'response'});
+  }
+
+  addContact(usernameContact: string): Observable<any> {
+    return this.http.post(
+      environment.apiUrl + '/user/contact/' + usernameContact,
+      '',
+      {
+        withCredentials: true,
+        observe: 'response'
+      }
+    );
+  }
+
+  deleteContact(userContactId: string): Observable<any> {
+    return this.http.delete(
+      environment.apiUrl + '/user/contact/' + userContactId,
+      {
+        withCredentials: true,
+        observe: 'response'
+      }
+    );
   }
 }

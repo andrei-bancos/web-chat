@@ -1,13 +1,23 @@
 package com.andreibancos.webchatbackend.dto;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class DisplayUserDto {
+    private UUID id;
     private String firstName;
     private String lastName;
     private String email;
     private String username;
     private Date createdAt;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;

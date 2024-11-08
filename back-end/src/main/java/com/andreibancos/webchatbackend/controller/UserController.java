@@ -17,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/api/user")
@@ -79,6 +81,41 @@ public class UserController {
         if(authentication != null && authentication.isAuthenticated()) {
             User user = userService.getUserByUsername(authentication.getName());
             userService.deleteUser(user.getId());
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/contacts")
+    @Operation(summary = "Get user contacts")
+    public ResponseEntity<Set<DisplayUserDto>> getUserContacts() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated()) {
+            User user = userService.getUserByUsername(authentication.getName());
+            return ResponseEntity.ok(userService.getUserContacts(user.getId()));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/contact/{usernameContact}")
+    @Operation(summary = "User add contact")
+    public ResponseEntity<Map<String, String>> addContact(@PathVariable String usernameContact) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated()) {
+            User user = userService.getUserByUsername(authentication.getName());
+            userService.addContact(user.getId(), usernameContact);
+            return ResponseEntity.ok(Map.of("message", "Contact has been added!"));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/contact/{userContactId}")
+    @Operation(summary = "Delete contact")
+    public ResponseEntity<String> deleteContact(@PathVariable UUID userContactId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated()) {
+            User user = userService.getUserByUsername(authentication.getName());
+            userService.deleteContact(user.getId(), userContactId);
         }
         return ResponseEntity.noContent().build();
     }

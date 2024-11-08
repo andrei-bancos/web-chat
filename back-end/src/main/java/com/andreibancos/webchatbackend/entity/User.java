@@ -112,11 +112,9 @@ public class User {
 
     public void addContact(User user) {
         this.contacts.add(user);
-        user.getContacts().add(this);
     }
 
     public void removeContact(User user) {
         this.contacts.remove(user);
-        user.getContacts().remove(this);
     }
 }

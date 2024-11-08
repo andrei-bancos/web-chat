@@ -30,6 +30,7 @@ export class SettingsComponent implements OnInit {
     this.userService.getAuthenticatedUserDetails().subscribe({
       next: res => {
         this.user = {
+          id: res.body.id,
           firstName: res.body.firstName,
           lastName: res.body.lastName,
           email: res.body.email,
