@@ -24,6 +24,9 @@ public class Message {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private boolean readed = false;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

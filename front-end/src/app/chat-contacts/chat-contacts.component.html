@@ -43,7 +43,7 @@
     </div>
     <ul
       *ngIf="contacts != null && contacts.length > 0"
-      class="flex h-[240px] flex-wrap gap-[30px] mt-[30px] overflow-y-scroll pb-[15px] scroll-bar"
+      class="flex h-[240px] flex-wrap gap-[30px] mt-[30px] overflow-y-auto pb-[15px] scroll-bar"
     >
       <li
         *ngFor="let user of contactsFiltered"
@@ -57,7 +57,7 @@
           fontIcon="delete"
         />
         <img class="rounded-l-[10px]" ngSrc="/avatar.png" width="100" height="100" alt="" />
-        <div matTooltip="Click aici pentru a trimite mesaj" class="cursor-pointer">
+        <div (click)="onOpenChat(user!.id)" matTooltip="Click aici pentru a trimite mesaj" class="cursor-pointer">
           <h3 class="text-[20px] font-medium line-clamp-1">{{user!.firstName}} {{user!.lastName}}</h3>
           <p class="text-primaryBlue break-all">&#64;{{user!.username}}</p>
         </div>

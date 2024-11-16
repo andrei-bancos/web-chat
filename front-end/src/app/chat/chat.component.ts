@@ -1,5 +1,5 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {AsyncPipe, NgIf, NgOptimizedImage} from "@angular/common";
+import {NgIf, NgOptimizedImage} from "@angular/common";
 import {ChatHistoryComponent} from "../chat-history/chat-history.component";
 import {ChatMessageComponent} from "../chat-message/chat-message.component";
 import {ChatContactsComponent} from "../chat-contacts/chat-contacts.component";
@@ -9,7 +9,7 @@ import {Observable, Subscription} from "rxjs";
 import {updateVisibilityContacts} from "./chat.actions";
 import {AuthService} from "../auth.service";
 import {User, UserService} from "../user.service";
-import {RouterLink} from "@angular/router";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-chat',
@@ -20,14 +20,14 @@ import {RouterLink} from "@angular/router";
     ChatMessageComponent,
     ChatContactsComponent,
     NgIf,
-    AsyncPipe,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './chat.component.html'
 })
 export class ChatComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly userService = inject(UserService);
+  private readonly activatedRouter = inject(ActivatedRoute);
 
   user: User = null;
 
@@ -36,10 +36,16 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   isContactsVisible: boolean = false;
 
+  chatUserId: string | null = null;
+
   constructor(private store: Store<{ chat: ChatState }>) {
     this.chat$ = this.store.select(store => store.chat);
     this.chatSubscribe = this.chat$.subscribe(chat => {
       this.isContactsVisible = chat.isContactsVisible;
+    })
+
+    this.activatedRouter.paramMap.subscribe(paramMap => {
+      this.chatUserId = paramMap.get("userId");
     })
   }
 

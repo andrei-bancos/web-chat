@@ -14,6 +14,7 @@ public interface IUserService {
     void createUser(User user);
     void updateUserPassword(User user, ChangeUserPasswordDto changeUserPasswordDto);
     void deleteUser(UUID id);
+    DisplayUserDto getUserContact(UUID userContactId);
     void addContact(UUID userId, String usernameContact);
     void deleteContact(UUID userId, UUID userContactId);
     Set<DisplayUserDto> getUserContacts(UUID userId);

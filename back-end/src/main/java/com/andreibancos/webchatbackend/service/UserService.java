@@ -123,4 +123,10 @@ public class UserService implements IUserService {
             throw new RuntimeException("User not found");
         }
     }
+
+    @Override
+    public DisplayUserDto getUserContact(UUID userContactId) {
+        User user = getUserById(userContactId);
+        return mapper.userToDisplayUserDto(user);
+    }
 }

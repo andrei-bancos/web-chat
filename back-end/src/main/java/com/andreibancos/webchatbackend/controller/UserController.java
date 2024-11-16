@@ -97,6 +97,17 @@ public class UserController {
         }
     }
 
+    @GetMapping("/contact/{userContactId}")
+    @Operation(summary = "Get contact user information's")
+    public ResponseEntity<DisplayUserDto> getUserContact(@PathVariable UUID userContactId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated()) {
+            userService.getUserByUsername(authentication.getName());
+            return ResponseEntity.ok(userService.getUserContact(userContactId));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @PostMapping("/contact/{usernameContact}")
     @Operation(summary = "User add contact")
     public ResponseEntity<Map<String, String>> addContact(@PathVariable String usernameContact) {

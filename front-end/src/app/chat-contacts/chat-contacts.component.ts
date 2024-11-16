@@ -7,6 +7,7 @@ import {updateVisibilityContacts} from "../chat/chat.actions";
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {User, UserService} from "../user.service";
 import {MatTooltip} from "@angular/material/tooltip";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-chat-contacts',
@@ -24,6 +25,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 })
 export class ChatContactsComponent implements OnInit {
   private readonly userService = inject(UserService);
+  private readonly router = inject(Router);
 
   searchFormControl: FormControl = new FormControl("", []);
   userNameFormControl: FormControl = new FormControl("", [Validators.required]);
@@ -94,5 +96,10 @@ export class ChatContactsComponent implements OnInit {
         this.getOrReloadContacts();
       }
     })
+  }
+
+  onOpenChat(userId: string): void {
+    this.onCloseClick();
+    this.router.navigate([`/chat/${userId}`]);
   }
 }
