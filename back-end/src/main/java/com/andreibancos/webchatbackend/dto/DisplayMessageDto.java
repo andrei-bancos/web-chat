@@ -8,7 +8,7 @@ public class DisplayMessageDto {
     private UUID senderId;
     private UUID receiverId;
     private String content;
-    private boolean readed;
+    private boolean read;
     private Date createdAt;
 
     public UUID getId() {
@@ -43,12 +43,12 @@ public class DisplayMessageDto {
         this.content = content;
     }
 
-    public boolean isReaded() {
-        return readed;
+    public boolean getRead() {
+        return read;
     }
 
-    public void setReaded(boolean readed) {
-        this.readed = readed;
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     public Date getCreatedAt() {

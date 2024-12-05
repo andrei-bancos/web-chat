@@ -8,13 +8,21 @@ public class LastChatsDto {
     private String firstName;
     private String lastName;
     private String lastMessage;
+    private boolean read;
     private Date createdAt;
 
-    public LastChatsDto(UUID userId, String firstName, String lastName, String lastMessage, Date createdAt) {
+    public LastChatsDto(
+            UUID userId,
+            String firstName,
+            String lastName,
+            String lastMessage,
+            boolean read,
+            Date createdAt) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.lastMessage = lastMessage;
+        this.read = read;
         this.createdAt = createdAt;
     }
 
@@ -48,6 +56,14 @@ public class LastChatsDto {
 
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    public boolean getRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     public Date getCreatedAt() {

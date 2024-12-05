@@ -25,7 +25,7 @@ public class Message {
     private String content;
 
     @Column(nullable = false)
-    private boolean readed = false;
+    private boolean read = false;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -73,5 +73,13 @@ public class Message {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean getRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }

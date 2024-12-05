@@ -11,6 +11,8 @@ import {MatIcon} from "@angular/material/icon";
 import {User, UserService} from "../user.service";
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {SendMessage, MessageService, DisplayMessage} from "../message.service";
+import {WebSocketService} from "../web-socket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-chat-message',
@@ -30,6 +32,7 @@ import {SendMessage, MessageService, DisplayMessage} from "../message.service";
 export class ChatMessageComponent implements OnChanges {
   private readonly userService = inject(UserService);
   private readonly messageService = inject(MessageService);
+  private readonly webSocketService = inject(WebSocketService);
 
   @Input() chatUserId: string | null = null;
   @ViewChild('messagesScroll') private messagesScroll: ElementRef | undefined;
@@ -38,6 +41,7 @@ export class ChatMessageComponent implements OnChanges {
   senderUser: User | null = null;
 
   messages: DisplayMessage[] = [];
+  private messagesWsSubscription: Subscription | undefined;
 
   messageFormControl: FormControl = new FormControl("", [Validators.required]);
 
@@ -51,6 +55,13 @@ export class ChatMessageComponent implements OnChanges {
       }
     })
     this.loadChat();
+
+    this.messagesWsSubscription = this.webSocketService.messagesWS$.subscribe(message => {
+      if(message.senderId === this.chatUserId && this.receivedUser!.id === message.senderId) {
+        this.messages.push(message);
+        this.scrollToBottom();
+      }
+    })
   }
 
   ngOnChanges() {
@@ -61,7 +72,7 @@ export class ChatMessageComponent implements OnChanges {
     setTimeout(() => {
       const container = this.messagesScroll!.nativeElement;
       container.scrollTop = container.scrollHeight;
-    }, 0)
+    }, 5)
   }
 
   private loadChat(): void {
@@ -103,14 +114,30 @@ export class ChatMessageComponent implements OnChanges {
       }
 
       this.messageService.sendMessage(this.receivedUser.id, message).subscribe({
-        next: () => {
+        next: (res) => {
           this.messageFormControl.reset();
-          this.loadChat()
+          this.messages.push(res.body);
         },
         error: (err) => {
           console.log(err);
+        },
+        complete: () => {
+          this.scrollToBottom();
+          this.messageService.triggerChatHistoryUpdate$();
         }
       })
+    }
+  }
+
+  markMessageAsRead(message: DisplayMessage): void {
+    if(message.senderId === this.chatUserId && !message.read) {
+      this.messageService.markAsRead(message.id).subscribe({
+        error: (err) => {
+          console.error(err);
+        }
+      })
+
+      message.read = true;
     }
   }
 }

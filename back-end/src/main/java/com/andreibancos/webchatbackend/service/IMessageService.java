@@ -11,4 +11,6 @@ public interface IMessageService {
     List<DisplayMessageDto> getChatMessages(UUID userSenderId, UUID userReceiverId);
     List<LastChatsDto> getLastChats(UUID userId);
     DisplayMessageDto sendMessage(UUID receiverId, SendMessageDto message);
+    void sendMessageToUserWS(UUID receiverId, DisplayMessageDto message);
+    boolean markAsRead(UUID messageId);
 }

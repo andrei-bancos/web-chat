@@ -7,8 +7,10 @@ import com.andreibancos.webchatbackend.dto.SendMessageDto;
 import com.andreibancos.webchatbackend.entity.Message;
 import com.andreibancos.webchatbackend.entity.User;
 import com.andreibancos.webchatbackend.repository.IMessageRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,17 +24,23 @@ public class MessageService implements IMessageService {
     private final IMessageRepository messageRepository;
     private final IUserService userService;
     private final IGeneralMapper generalMapper;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    public MessageService(IMessageRepository messageRepository, IUserService userService, IGeneralMapper generalMapper) {
+    public MessageService(
+            IMessageRepository messageRepository,
+            IUserService userService,
+            IGeneralMapper generalMapper,
+            SimpMessagingTemplate messagingTemplate
+    ) {
         this.messageRepository = messageRepository;
         this.userService = userService;
         this.generalMapper = generalMapper;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @Override
     public List<DisplayMessageDto> getChatMessages(UUID userSenderId, UUID userReceiverId) {
         List<Message> messages = messageRepository.findAllMessagesBetweenUsers(userSenderId, userReceiverId);
-
         return messages.stream()
                 .map(generalMapper::messageToDisplayMessageDto)
                 .collect(Collectors.toList());
@@ -63,7 +71,7 @@ public class MessageService implements IMessageService {
         String lastMessage = message.getContent();
         Date createdAt = message.getCreatedAt();
 
-        return new LastChatsDto(otherUserId, firstName, lastName, lastMessage, createdAt);
+        return new LastChatsDto(otherUserId, firstName, lastName, lastMessage, message.getRead(), createdAt);
     }
 
     @Override
@@ -79,5 +87,25 @@ public class MessageService implements IMessageService {
         messageRepository.save(message);
 
         return generalMapper.messageToDisplayMessageDto(message);
+    }
+
+    public void sendMessageToUserWS(UUID receiverId, DisplayMessageDto message) {
+        User receiverUser = userService.getUserById(receiverId);
+        messagingTemplate.convertAndSendToUser(
+                receiverUser.getUsername(),
+                "/queue/messages",
+                message
+        );
+    }
+
+    @Override
+    public boolean markAsRead(UUID messageId) {
+        Message message = messageRepository.findById(messageId).orElseThrow(() ->
+                new EntityNotFoundException("Message not found")
+        );
+
+        message.setRead(true);
+        messageRepository.save(message);
+        return true;
     }
 }

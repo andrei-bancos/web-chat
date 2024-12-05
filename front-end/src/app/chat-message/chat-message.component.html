@@ -9,14 +9,25 @@
       <p class="text-primaryBlue">&#64;{{receivedUser?.username}}</p>
     </div>
   </div>
-  <div #messagesScroll class="flex flex-col h-[500px] scroll-bar overflow-y-auto gap-[15px] my-[15px] py-[15px] pr-[15px]">
+  <div
+    #messagesScroll
+    class="flex flex-col h-[500px] scroll-bar overflow-y-auto gap-[15px] my-[15px] py-[15px] pr-[15px]"
+  >
     <div *ngFor="let message of messages">
       <div
         [ngClass]="['flex flex-col', senderUser!.id === message.senderId ? 'justify-self-end items-end' : '']"
+        (mouseover)="markMessageAsRead(message)"
       >
-        <p class="text-[20px] w-fit h-fit p-[10px_20px] rounded-[10px] bg-[#eee] shadow-md">
-          {{message.content}}
-        </p>
+        <div class="flex gap-[15px] items-center">
+          <p class="text-[20px] w-fit h-fit max-w-[500px] p-[10px_20px] rounded-[10px] bg-[#eee] shadow-md break-words">
+            {{message.content}}
+          </p>
+          <mat-icon
+            *ngIf="message.senderId === chatUserId && !message.read"
+            class="text-primaryBlue !text-[30px] !w-[30px] !h-[30px]"
+            fontIcon="fiber_new"
+          />
+        </div>
         <span class="text-gray-600 text-[14px] pt-[10px] mx-[5px]">
           {{
             senderUser!.id === message.senderId ? "Trimis de tine - ":
@@ -39,6 +50,7 @@
     </button>
   </form>
 </section>
+
 
 <section
   *ngIf="chatUserId === null"
