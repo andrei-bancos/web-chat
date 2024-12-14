@@ -134,6 +134,9 @@ export class ChatMessageComponent implements OnChanges {
       this.messageService.markAsRead(message.id).subscribe({
         error: (err) => {
           console.error(err);
+        },
+        complete: () => {
+          this.messageService.triggerChatHistoryUpdate$();
         }
       })
 

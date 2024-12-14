@@ -54,16 +54,14 @@ public class MessageService implements IMessageService {
         List<LastChatsDto> lastChats = new ArrayList<>();
 
         for (Message message : messages) {
-            UUID otherUserId = message.getSender().getId().equals(userId) ?
-                               message.getReceiver().getId() : message.getSender().getId();
-            LastChatsDto lastChat = getLastChatsDto(userId, message, otherUserId);
+            LastChatsDto lastChat = getLastChatsDto(userId, message);
             lastChats.add(lastChat);
         }
 
         return lastChats;
     }
 
-    private static LastChatsDto getLastChatsDto(UUID userId, Message message, UUID otherUserId) {
+    private static LastChatsDto getLastChatsDto(UUID userId, Message message) {
         String firstName = message.getSender().getId().equals(userId) ?
                            message.getReceiver().getFirstName() : message.getSender().getFirstName();
         String lastName = message.getSender().getId().equals(userId) ?
@@ -71,7 +69,15 @@ public class MessageService implements IMessageService {
         String lastMessage = message.getContent();
         Date createdAt = message.getCreatedAt();
 
-        return new LastChatsDto(otherUserId, firstName, lastName, lastMessage, message.getRead(), createdAt);
+        return new LastChatsDto(
+                message.getSender().getId(),
+                message.getReceiver().getId(),
+                firstName,
+                lastName,
+                lastMessage,
+                message.getRead(),
+                createdAt
+        );
     }
 
     @Override

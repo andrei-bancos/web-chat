@@ -4,7 +4,8 @@ import java.util.Date;
 import java.util.UUID;
 
 public class LastChatsDto {
-    private UUID userId;
+    private UUID senderUserId;
+    private UUID receivedUserId;
     private String firstName;
     private String lastName;
     private String lastMessage;
@@ -12,13 +13,15 @@ public class LastChatsDto {
     private Date createdAt;
 
     public LastChatsDto(
-            UUID userId,
+            UUID senderUserId,
+            UUID receivedUserId,
             String firstName,
             String lastName,
             String lastMessage,
             boolean read,
             Date createdAt) {
-        this.userId = userId;
+        this.senderUserId = senderUserId;
+        this.receivedUserId = receivedUserId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.lastMessage = lastMessage;
@@ -26,12 +29,20 @@ public class LastChatsDto {
         this.createdAt = createdAt;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public UUID getSenderUserId() {
+        return senderUserId;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setSenderUserId(UUID senderUserId) {
+        this.senderUserId = senderUserId;
+    }
+
+    public UUID getReceivedUserId() {
+        return receivedUserId;
+    }
+
+    public void setReceivedUserId(UUID receivedUserId) {
+        this.receivedUserId = receivedUserId;
     }
 
     public String getFirstName() {

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject} from '@angular/core';
+import {AfterViewInit, Component, inject, Input} from '@angular/core';
 import {NgForOf} from "@angular/common";
 import {RouterLink, RouterLinkActive} from "@angular/router";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -6,6 +6,7 @@ import {MatIcon} from "@angular/material/icon";
 import {LastChats, MessageService} from "../message.service";
 import {WebSocketService} from "../web-socket.service";
 import {Subscription} from "rxjs";
+import {User} from "../user.service";
 
 @Component({
   selector: 'app-chat-history',
@@ -25,6 +26,8 @@ export class ChatHistoryComponent implements AfterViewInit {
 
   private chatHistoryUpdate: Subscription | undefined;
   private messagesWsSubscription: Subscription | undefined;
+
+  @Input() connectedUser: User | null = null;
 
   lastChats: LastChats[] = [];
 

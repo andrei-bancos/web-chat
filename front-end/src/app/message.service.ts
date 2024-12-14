@@ -18,7 +18,8 @@ export type DisplayMessage = {
 }
 
 export type LastChats = {
-  userId: string;
+  senderUserId: string;
+  receivedUserId: string;
   firstName: string;
   lastName: string;
   lastMessage: string;
