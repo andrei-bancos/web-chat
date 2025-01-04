@@ -25,6 +25,7 @@ export class SettingsComponent implements OnInit {
   changePasswordForm: FormGroup | undefined;
 
   user: User = null;
+  contactsTotalNumber: number | null = null;
 
   ngOnInit() {
     this.userService.getAuthenticatedUserDetails().subscribe({
@@ -42,6 +43,15 @@ export class SettingsComponent implements OnInit {
         console.error(error);
       }
     });
+
+    this.userService.getContacts().subscribe({
+      next: res => {
+        this.contactsTotalNumber = res.body.length;
+      },
+      error: error => {
+        console.error(error);
+      }
+    })
 
     this.changePasswordForm = this.fb.group({
       oldPassword: ['', [Validators.required]],
