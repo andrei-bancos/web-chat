@@ -3,6 +3,7 @@ import {NgIf, NgOptimizedImage} from "@angular/common";
 import {ChangeUserPassword, User, UserService} from "../user.service";
 import {RouterLink} from "@angular/router";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {AuthService} from "../auth.service";
 
 @Component({
   selector: 'app-settings',
@@ -19,6 +20,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 export class SettingsComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly fb = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
 
   formResponseMessage: string = "";
 
@@ -91,5 +93,6 @@ export class SettingsComponent implements OnInit {
 
   onDelete() {
     this.userService.deleteUser().subscribe();
+    this.authService.logout().subscribe();
   }
 }

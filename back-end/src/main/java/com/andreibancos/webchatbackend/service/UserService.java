@@ -4,9 +4,11 @@ import com.andreibancos.webchatbackend.IGeneralMapper;
 import com.andreibancos.webchatbackend.dto.ChangeUserPasswordDto;
 import com.andreibancos.webchatbackend.dto.DisplayUserDto;
 import com.andreibancos.webchatbackend.entity.User;
+import com.andreibancos.webchatbackend.repository.IMessageRepository;
 import com.andreibancos.webchatbackend.repository.IUserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,12 @@ import java.util.stream.Collectors;
 public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final IGeneralMapper mapper;
+    private final IMessageRepository messageRepository;
 
-    public UserService(IUserRepository IUserRepository, IGeneralMapper mapper) {
+    public UserService(IUserRepository IUserRepository, IGeneralMapper mapper, IMessageRepository IMessageRepository) {
         this.userRepository = IUserRepository;
         this.mapper = mapper;
+        this.messageRepository = IMessageRepository;
     }
 
     @Override
@@ -85,8 +89,18 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(UUID id) {
         User userToDelete = getUserById(id);
+
+        messageRepository.deleteBySender(id);
+        messageRepository.deleteByReceiver(id);
+
+        for (User contact : userToDelete.getContacts()) {
+            contact.getContacts().remove(userToDelete);
+        }
+        userToDelete.getContacts().clear();
+
         userRepository.delete(userToDelete);
     }
 

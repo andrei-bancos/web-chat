@@ -3,7 +3,9 @@ package com.andreibancos.webchatbackend.repository;
 import com.andreibancos.webchatbackend.entity.Message;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,4 +29,12 @@ public interface IMessageRepository extends JpaRepository<Message, UUID> {
         "AND (m.sender.id = :userId OR m.receiver.id = :userId) ORDER BY m.createdAt DESC"
     )
     List<Message> findLastMessagesWithUsers(UUID userId, Pageable pageable);
+
+    @Modifying
+    @Query("DELETE FROM Message m WHERE m.sender.id = :userId")
+    void deleteBySender(@Param("userId") UUID userId);
+
+    @Modifying
+    @Query("DELETE FROM Message m WHERE m.receiver.id = :userId")
+    void deleteByReceiver(@Param("userId") UUID userId);
 }
